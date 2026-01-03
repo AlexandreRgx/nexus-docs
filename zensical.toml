@@ -1,0 +1,132 @@
+# Zensical Configuration
+# Modern static site generator - https://zensical.org
+
+[project]
+site_name = "Nexus Platform Documentation"
+site_description = "Engineering & AI Platform Documentation - Vision, Architecture, and Operations"
+site_author = "Platform Engineering Team"
+site_url = "https://your-org.github.io/nexus-docs/"
+copyright = "&copy; 2025 Platform Engineering Team"
+
+# Repository
+repo_url = "https://github.com/your-org/nexus-docs"
+repo_name = "your-org/nexus-docs"
+
+# Extra CSS
+extra_css = ["stylesheets/extra.css"]
+
+# Extra JavaScript for Mermaid diagrams
+extra_javascript = [
+  "https://unpkg.com/mermaid@10/dist/mermaid.min.js",
+  "javascripts/mermaid-init.js"
+]
+
+# Navigation Structure (must be under [project], before theme)
+nav = [
+  {"Nexus Platform" = "index.md"},
+  {"Team" = "_Team.md"},
+  {"Roadmap" = "_Roadmap.md"},
+
+  {"Architecture" = [
+    "_Architecture/index.md",
+    {"Identity & Governance" = "_Architecture/governance.md"},
+    {"ADRs" = "_Architecture/adrs.md"}
+  ]},
+
+  {"AI Platform" = [
+    "_AI-Platform/index.md",
+    {"Foundations" = [
+      "_AI-Platform/_Foundations/index.md",
+      {"Model Access" = "_AI-Platform/_Foundations/_1-model-access.md"},
+      {"MCP Ecosystem" = "_AI-Platform/_Foundations/_2-mcp-ecosystem.md"}
+    ]},
+    {"Agents" = [
+      "_AI-Platform/agents/index.md",
+      {"Agent Hosting" = "_AI-Platform/agents/_1-hosting.md"},
+      {"Agent Identity & A2A" = "_AI-Platform/agents/_2-identity.md"},
+      {"Agent Templates" = "_AI-Platform/agents/_3-templates.md"},
+      {"Agent Tools" = "_AI-Platform/agents/_4-tools.md"},
+      {"MCP Integration" = "_AI-Platform/agents/_5-mcp-integration.md"}
+    ]},
+    {"AI Dev Tools" = [
+      "_AI-Platform/dev-tools/index.md",
+      {"Golden Rules MCP" = "_AI-Platform/dev-tools/migail.md"}
+    ]}
+  ]},
+
+  {"Engineering" = [
+    "_Engineering/index.md",
+    {"Nexus Interfaces" = [
+      "_Engineering/interfaces/index.md",
+      {"API" = "_Engineering/interfaces/api.md"},
+      {"SDK" = "_Engineering/interfaces/sdk.md"},
+      {"CLI" = "_Engineering/interfaces/cli.md"},
+      {"Web App" = "_Engineering/interfaces/webapp.md"}
+    ]},
+    {"Infrastructure as Code" = "_Engineering/infrastructure.md"},
+    {"Registries" = [
+      {"Application Registry" = "_Engineering/application-registry.md"},
+      {"Product Suite Registry" = "_Engineering/service-registry.md"}
+    ]},
+    {"Security" = [
+      "_Engineering/security/index.md"
+    ]},
+    {"Observability" = [
+      "_Engineering/observability/index.md"
+    ]}
+  ]},
+
+  {"Operations" = [
+    "_Operations/index.md",
+    {"Incident Management" = "_Operations/incidents.md"}
+  ]},
+
+  {"Contributing" = [
+    "_Contributing/index.md",
+    {"Style Guide" = "_Contributing/style-guide.md"},
+    {"Templates" = [
+      "_Contributing/templates/index.md",
+      {"RFC" = "_Contributing/templates/rfc.md"},
+      {"ADR" = "_Contributing/templates/adr.md"},
+      {"Runbook" = "_Contributing/templates/runbook.md"}
+    ]}
+  ]}
+]
+
+# Theme Configuration
+[project.theme]
+variant = "modern"
+features = [
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.instant.progress",
+  "navigation.tracking",
+  "navigation.tabs",
+  "navigation.tabs.sticky",
+  "navigation.sections",
+  "navigation.path",
+  "navigation.indexes",
+  "navigation.top",
+  "search.suggest",
+  "search.highlight",
+  "content.code.copy",
+  "toc.follow"
+]
+
+# Markdown Extensions
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.superfences]
+
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+
+[project.markdown_extensions.pymdownx.emoji]
+emoji_index = "zensical.extensions.emoji.twemoji"
+emoji_generator = "zensical.extensions.emoji.to_svg"
+
+# Extra settings
+[project.extra]
+generator = false

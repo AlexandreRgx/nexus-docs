@@ -1,0 +1,2 @@
+# Zensical - Modern static site generator
+zensical>=0.0.15
