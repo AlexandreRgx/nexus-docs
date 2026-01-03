@@ -5,12 +5,12 @@
 site_name = "Nexus Platform Documentation"
 site_description = "Engineering & AI Platform Documentation - Vision, Architecture, and Operations"
 site_author = "Platform Engineering Team"
-site_url = "https://your-org.github.io/nexus-docs/"
+site_url = "https://cegid.github.io/nexus-docs/"
 copyright = "&copy; 2025 Platform Engineering Team"
 
 # Repository
-repo_url = "https://github.com/your-org/nexus-docs"
-repo_name = "your-org/nexus-docs"
+repo_url = "https://github.com/cegid/nexus-docs"
+repo_name = "cegid/nexus-docs"
 
 # Extra CSS
 extra_css = ["stylesheets/extra.css"]

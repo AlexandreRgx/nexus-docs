@@ -160,6 +160,6 @@ The internal platform that unifies Engineering and AI.
 
 <div style="text-align: center; padding: 2em 0; color: #888;">
 
-:material-slack: `#platform-engineering` · :material-github: [nexus-docs](https://github.com/your-org/nexus-docs)
+:material-github: [nexus-docs](https://github.com/cegid/nexus-docs)
 
 </div>

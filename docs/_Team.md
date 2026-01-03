@@ -132,6 +132,4 @@ gantt
 
 | Channel | Purpose |
 |---------|---------|
-| :material-slack: `#nexus-platform` | General questions |
-| :material-slack: `#nexus-architecture` | Architecture discussions |
-| :material-github: [nexus-docs](https://github.com/your-org/nexus-docs) | Documentation |
+| :material-github: [nexus-docs](https://github.com/cegid/nexus-docs) | Documentation |

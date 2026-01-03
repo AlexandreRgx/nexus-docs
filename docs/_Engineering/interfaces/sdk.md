@@ -25,7 +25,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
 === "Go"
 
     ```bash
-    go get github.com/your-org/nexus-sdk-go
+    go get github.com/cegid/nexus-sdk-go
     ```
 
 ---
@@ -65,7 +65,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
 === "Go"
 
     ```go
-    import "github.com/your-org/nexus-sdk-go"
+    import "github.com/cegid/nexus-sdk-go"
 
     client := nexus.NewClient(
         nexus.WithToken(os.Getenv("NEXUS_TOKEN")),

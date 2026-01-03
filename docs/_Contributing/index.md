@@ -10,7 +10,7 @@ Guide for contributing to the Nexus documentation.
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/nexus-docs.git
+git clone https://github.com/cegid/nexus-docs.git
 cd nexus-docs
 
 # Create a virtualenv
@@ -96,5 +96,4 @@ graph LR
 
 ## Questions?
 
-- **Slack**: `#platform-docs`
-- **GitHub**: Issues on the repo
+- **GitHub**: [Issues](https://github.com/cegid/nexus-docs/issues)
