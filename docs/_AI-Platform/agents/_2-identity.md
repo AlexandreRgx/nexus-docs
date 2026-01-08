@@ -52,7 +52,7 @@ nexus ai agent identity my-agent
 
 # Output:
 # Agent ID: agent_abc123
-# Service Account: my-agent@agents.nexus.internal
+# Service Account: my-agent@agents.nexus.cegid.com
 # Scopes: ai:models, tools:rag
 ```
 
@@ -71,7 +71,7 @@ class MyAgent(Agent):
         # Token claims
         # {
         #   "sub": "agent_abc123",
-        #   "iss": "nexus.internal",
+        #   "iss": "nexus.cegid.com",
         #   "aud": ["nexus-ai", "nexus-tools"],
         #   "scopes": ["ai:models", "tools:rag"],
         #   "exp": 1705312800
@@ -151,23 +151,6 @@ async def process(self, input: str):
 | `agents:call:*` | Can call all agents |
 | `agents:call:researcher` | Can call the researcher agent |
 
-### Configure permissions
-
-```yaml
-# config.yaml
-identity:
-  scopes:
-    - ai:models
-    - tools:rag
-    - agents:call:researcher
-    - agents:call:writer
-
-  # Who can call this agent
-  allow_callers:
-    - orchestrator-agent
-    - api-gateway
-```
-
 ### Verify permissions
 
 ```python
@@ -186,44 +169,9 @@ class MyAgent(Agent):
 
 ---
 
-## Service Mesh
+## Security
 
-Agents are integrated into the Istio service mesh:
-
-### Automatic mTLS
-
-All inter-agent communications are encrypted:
-
-```yaml
-# Automatically generated Istio policy
-apiVersion: security.istio.io/v1beta1
-kind: PeerAuthentication
-metadata:
-  name: agent-mtls
-spec:
-  mtls:
-    mode: STRICT
-```
-
-### Authorization Policy
-
-```yaml
-# Authorization policy
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: my-agent-policy
-spec:
-  selector:
-    matchLabels:
-      app: my-agent
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/agents/sa/orchestrator-agent"
-              - "cluster.local/ns/agents/sa/api-gateway"
-```
+All inter-agent communications are encrypted with mTLS. Authorization policies are automatically configured based on agent permissions.
 
 ---
 

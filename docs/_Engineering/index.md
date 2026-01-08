@@ -14,10 +14,10 @@ The Engineering Platform provides the technical foundation for all development t
 graph TB
     subgraph "Engineering Platform"
         subgraph "Nexus Interfaces"
-            API[REST API]
-            SDK[SDK]
             CLI[CLI]
             WEBAPP[Web App]
+            SDK[SDK]
+            API[REST API]
         end
 
         IAC[Infrastructure as Code]
@@ -35,17 +35,15 @@ graph TB
     DEV --> SDK
     DEV --> WEBAPP
     CICD[CI/CD] --> API
+    CICD --> CLI
 
-    CLI --> AR
-    CLI --> PSR
-    CLI --> IAC
-    SDK --> AR
-    SDK --> PSR
-    WEBAPP --> AR
-    WEBAPP --> PSR
-    WEBAPP --> IAC
+    CLI --> API
+    WEBAPP --> API
+    SDK --> API
+
     API --> AR
     API --> PSR
+    API --> IAC
 ```
 
 ---
@@ -116,7 +114,7 @@ The platform makes default choices. Examples:
 | Aspect | Convention |
 |--------|------------|
 | Naming | `{team}-{app}-{env}` |
-| K8s Labels | `app.kubernetes.io/*` |
+| Resource Tags | `nexus.cegid.com/{key}` |
 | Metrics | Mandatory RED metrics |
 | Logs | Structured JSON format |
 
@@ -173,11 +171,11 @@ Without tickets. Within guardrail limits.
 
     ```bash
     # Create an application
-    curl -X POST https://nexus.internal/api/v1/apps \
+    curl -X POST https://nexus.cegid.com/api/v1/apps \
       -H "Authorization: Bearer $TOKEN" \
       -d '{"name": "my-app", "team": "platform"}'
 
     # List services
-    curl https://nexus.internal/api/v1/services \
+    curl https://nexus.cegid.com/api/v1/services \
       -H "Authorization: Bearer $TOKEN"
     ```

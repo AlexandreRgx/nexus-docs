@@ -104,42 +104,14 @@ For **managed/hybrid deployments**:
 
 ## Usage
 
-### Endpoint
-
-```
-https://nexus.internal/ai/v1
-```
-
-### With the Nexus SDK
-
-```python
-from nexus.ai import NexusAI
-
-ai = NexusAI()
-
-# Chat completion
-response = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Explain microservices."}
-    ],
-    temperature=0.7,
-    max_tokens=1000
-)
-
-print(response.choices[0].message.content)
-```
-
-### With the OpenAI SDK (compatible)
+The AI Gateway exposes an **OpenAI-compatible API**. Use any OpenAI SDK or HTTP client:
 
 ```python
 from openai import OpenAI
 
-# Point to Nexus instead of OpenAI
 client = OpenAI(
-    base_url="https://nexus.internal/ai/v1",
-    api_key="unused"  # Auth is done via NEXUS_TOKEN
+    base_url="https://nexus.cegid.com/ai/v1",
+    api_key=os.environ["NEXUS_TOKEN"]
 )
 
 response = client.chat.completions.create(
@@ -148,178 +120,33 @@ response = client.chat.completions.create(
 )
 ```
 
-### Streaming
-
-```python
-# Streaming response
-stream = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Write a story."}],
-    stream=True
-)
-
-for chunk in stream:
-    if chunk.choices[0].delta.content:
-        print(chunk.choices[0].delta.content, end="")
-```
+All standard features are supported: streaming, function calling, vision, embeddings.
 
 ---
 
-## Available models
+## Available Models
 
-### Production
-
-| Nexus Alias | Provider | Actual model | Use case |
-|-------------|----------|-------------|----------|
-| `gpt-4o` | Azure OpenAI | gpt-4o-2024-08-06 | General |
-| `gpt-4-turbo` | Azure OpenAI | gpt-4-turbo-2024-04-09 | Long context |
-| `gpt-3.5-turbo` | Azure OpenAI | gpt-35-turbo-0125 | Cost optimized |
-| `claude-3-opus` | Anthropic | claude-3-opus-20240229 | Analysis |
-| `claude-3-sonnet` | Anthropic | claude-3-5-sonnet-20241022 | Balance |
-| `claude-3-haiku` | Anthropic | claude-3-haiku-20240307 | Fast |
-| `mistral-large` | Mistral | mistral-large-latest | EU compliant |
-
-### Use a specific model
-
-```python
-# Via alias (recommended)
-response = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[...]
-)
-
-# Via provider full name
-response = ai.chat.completions.create(
-    model="azure/gpt-4o-2024-08-06",
-    messages=[...]
-)
-```
+| Alias | Provider | Use case |
+|-------|----------|----------|
+| `gpt-4o` | Azure OpenAI | General purpose |
+| `gpt-4-turbo` | Azure OpenAI | Long context |
+| `gpt-3.5-turbo` | Azure OpenAI | Cost optimized |
+| `claude-3-opus` | Anthropic | Deep analysis |
+| `claude-3-sonnet` | Anthropic | Balanced |
+| `claude-3-haiku` | Anthropic | Fast & cheap |
+| `mistral-large` | Mistral | EU compliant |
 
 ---
 
-## Advanced features
+## Gateway Features
 
-### Function Calling
+The AI Gateway handles automatically:
 
-```python
-response = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "What's the weather in Paris?"}],
-    tools=[{
-        "type": "function",
-        "function": {
-            "name": "get_weather",
-            "description": "Get weather for a location",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "location": {"type": "string"}
-                },
-                "required": ["location"]
-            }
-        }
-    }]
-)
-```
-
-### Vision
-
-```python
-response = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{
-        "role": "user",
-        "content": [
-            {"type": "text", "text": "What's in this image?"},
-            {"type": "image_url", "image_url": {"url": "https://..."}}
-        ]
-    }]
-)
-```
-
-### Embeddings
-
-```python
-response = ai.embeddings.create(
-    model="text-embedding-3-small",
-    input=["Hello world", "Goodbye world"]
-)
-
-vectors = [e.embedding for e in response.data]
-```
-
----
-
-## Caching
-
-Identical responses are cached automatically:
-
-```python
-# First request: call to provider
-response1 = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "What is 2+2?"}]
-)
-# Latency: ~800ms, tokens billed
-
-# Same request: cache hit
-response2 = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "What is 2+2?"}]
-)
-# Latency: ~5ms, no tokens billed
-```
-
-### Control caching
-
-```python
-# Disable cache for this request
-response = ai.chat.completions.create(
-    model="gpt-4o",
-    messages=[...],
-    extra_headers={"X-Nexus-Cache": "skip"}
-)
-```
-
----
-
-## Observability
-
-### Exposed metrics
-
-| Metric | Description |
-|----------|-------------|
-| `nexus_ai_requests_total` | Number of requests per model |
-| `nexus_ai_tokens_total` | Tokens consumed (input/output) |
-| `nexus_ai_latency_seconds` | Request latency |
-| `nexus_ai_errors_total` | Errors by type |
-| `nexus_ai_cache_hits_total` | Cache hits |
-
-### Grafana Dashboard
-
-A pre-configured dashboard is available:
-
-- Requests by team/application
-- Real-time costs
-- Latency P50/P95/P99
-- Top used models
-- Errors and rate limits
-
----
-
-## Fallback and retry
-
-The gateway automatically handles:
-
-- **Retry**: 3 attempts on 5xx errors
-- **Fallback**: Switch to backup provider if unavailable
-- **Rate limiting**: Queue and automatic backoff
-
-```mermaid
-graph LR
-    REQ[Request] --> PRIMARY[Azure OpenAI]
-    PRIMARY -->|Error| FALLBACK[Anthropic]
-    FALLBACK -->|Error| ERROR[Return Error]
-    PRIMARY -->|Success| RESP[Response]
-    FALLBACK -->|Success| RESP
-```
+| Feature | Description |
+|---------|-------------|
+| **Caching** | Identical requests cached, ~95% cost savings |
+| **Retry** | 3 attempts on 5xx errors |
+| **Fallback** | Switch to backup provider if unavailable |
+| **Rate limiting** | Queue and automatic backoff |
+| **Observability** | Metrics, logs, traces per team/app |
+| **Cost tracking** | Real-time spend per project |

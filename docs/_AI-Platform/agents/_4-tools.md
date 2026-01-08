@@ -1,23 +1,25 @@
-# Agent Tools
+# Agent Tools & MCP
 
 <p style="font-size: 1.1em; color: #666; margin-bottom: 2em;">
-Pre-integrated tools to extend your agents' capabilities.
+Tools to extend your agents' capabilities, including MCP integration.
 </p>
 
 ---
 
 ## Overview
 
-Agent Tools allow agents to interact with the outside world:
+Agents use tools via the [MCP protocol](https://modelcontextprotocol.io) (Model Context Protocol).
 
 ```mermaid
 graph LR
-    AGENT[Agent] --> TOOLS{Tools}
-    TOOLS --> RAG[RAG API]
-    TOOLS --> CODE[Code Execution]
-    TOOLS --> WEB[Web Search]
-    TOOLS --> CUSTOM[Custom APIs]
+    AGENT[Agent] --> MCP{MCP}
+    MCP --> RAG[RAG Server]
+    MCP --> CODE[Code Sandbox]
+    MCP --> WEB[Web Search]
+    MCP --> CUSTOM[Custom MCP Servers]
 ```
+
+Nexus provides pre-configured MCP servers for common use cases.
 
 ---
 
@@ -68,17 +70,6 @@ indexer.add_url("https://docs.example.com")
 indexer.build()
 ```
 
-### Configuration
-
-```yaml
-tools:
-  rag:
-    index: documentation
-    top_k: 5
-    similarity_threshold: 0.7
-    embedding_model: text-embedding-3-small
-```
-
 ---
 
 ## Code Execution
@@ -125,17 +116,6 @@ The sandbox is isolated with:
 | `scikit-learn` | Basic ML |
 | `requests` | HTTP (if network enabled) |
 
-### Enable network access
-
-```yaml
-tools:
-  code:
-    network: true
-    allowed_hosts:
-      - "api.example.com"
-      - "data.internal"
-```
-
 ---
 
 ## Web Search
@@ -178,19 +158,6 @@ print(page.links)  # Links on the page
 
 # Screenshot (headless)
 screenshot = browser.screenshot("https://example.com")
-```
-
-### Configuration
-
-```yaml
-tools:
-  web:
-    provider: bing  # or google, duckduckgo
-    max_results: 10
-    safe_search: true
-    allowed_domains:
-      - "*.wikipedia.org"
-      - "docs.*"
 ```
 
 ---
@@ -236,60 +203,31 @@ class MyAgent(Agent):
     tools = tools
 ```
 
-### MCP Integration
-
-Use MCP servers as tools:
-
-```python
-from nexus.ai.tools import MCPTool
-
-class MyAgent(Agent):
-    def __init__(self):
-        super().__init__()
-        # Connect to an MCP server
-        self.mcp = MCPTool("github-mcp")
-
-    @tool
-    def github_search(self, query: str) -> str:
-        """Search on GitHub."""
-        return self.mcp.call("search_repositories", query=query)
-```
-
 ---
 
-## Global configuration
+## MCP Integration
 
-```yaml
-# config.yaml
-tools:
-  # RAG
-  rag:
-    enabled: true
-    index: my-docs
+All tools are exposed via [MCP](https://modelcontextprotocol.io) (Model Context Protocol).
 
-  # Code execution
-  code:
-    enabled: true
-    timeout: 30
-    packages:
-      - pandas
-      - numpy
+### Cegid MCP Catalog
 
-  # Web
-  web:
-    enabled: true
-    max_results: 5
+Pre-configured MCP servers available in the Cegid ecosystem:
 
-  # Custom
-  custom:
-    - name: weather
-      url: https://api.weather.internal
-      auth: service_account
+| Server | Description |
+|--------|-------------|
+| `github` | GitHub repositories, issues, PRs |
+| `jira` | Jira tickets and projects |
+| `confluence` | Confluence pages and spaces |
+| `slack` | Slack messages and channels |
+| `postgres` | PostgreSQL database queries |
+| `filesystem` | File system access (scoped) |
 
-  # MCP
-  mcp:
-    - name: github
-      server: github-mcp
+### Custom MCP servers
+
+Register your own MCP server:
+
+```bash
+nexus mcp register my-server --url mcp://my-server.internal
 ```
 
 ---
@@ -328,12 +266,4 @@ tools:
 
 !!! danger "Costs"
 
-    Tools can consume a lot of resources. Configure limits.
-
-    ```yaml
-    tools:
-      web:
-        rate_limit: 10/minute
-      code:
-        max_executions_per_request: 5
-    ```
+    Tools can consume a lot of resources. Configure limits to avoid excessive usage.

@@ -19,13 +19,3 @@ Developer tools powered by AI to improve productivity and code quality.
     [:octicons-arrow-right-24: Details](migail.md)
 
 </div>
-
----
-
-## Coming Soon
-
-| Tool | Description | Status |
-|------|-------------|--------|
-| **Code Analyzer** | Static analysis with AI insights | Planned |
-| **Doc Generator** | Auto-generate documentation | Planned |
-| **Test Advisor** | Testing strategy recommendations | Planned |

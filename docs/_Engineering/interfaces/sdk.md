@@ -43,7 +43,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
     # Or explicit configuration
     client = NexusClient(
         token="...",
-        base_url="https://nexus.internal"
+        base_url="https://nexus.cegid.com"
     )
     ```
 
@@ -58,7 +58,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
     // Or explicit configuration
     const client = new NexusClient({
       token: process.env.NEXUS_TOKEN,
-      baseUrl: 'https://nexus.internal'
+      baseUrl: 'https://nexus.cegid.com'
     });
     ```
 
@@ -334,7 +334,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
 
     client = NexusClient(
         token="...",
-        base_url="https://nexus.internal",
+        base_url="https://nexus.cegid.com",
         timeout=30.0,
         retry_config={
             "max_retries": 3,
@@ -352,7 +352,7 @@ Typed clients for Python, TypeScript, and Go. Auto-generated via Fern.
     ```typescript
     const client = new NexusClient({
       token: '...',
-      baseUrl: 'https://nexus.internal',
+      baseUrl: 'https://nexus.cegid.com',
       timeout: 30000,
       retryConfig: {
         maxRetries: 3,

@@ -28,8 +28,8 @@ Operational practices and incident management.
 
 | Team | Schedule | Tool |
 |--------|----------|------|
-| Platform Core | Weekly rotation | PagerDuty |
-| AI Platform | Weekly rotation | PagerDuty |
+| Platform Core | Weekly rotation | GitHub Issues |
+| AI Platform | Weekly rotation | GitHub Issues |
 
 ### Emergency Contacts
 
@@ -37,28 +37,30 @@ Operational practices and incident management.
 |-----------|---------|
 | Platform incident | `#incident-response` Slack |
 | Security incident | `#security-incidents` Slack |
-| Escalation | PagerDuty |
+| Escalation | GitHub Issues |
 
 ---
 
-## SLOs
+## Target SLOs
 
-| Service | SLO | Current | Status |
-|---------|-----|--------|--------|
-| Nexus API | 99.9% | 99.95% | :material-check-circle:{ style="color: green" } |
-| AI Gateway | 99.5% | 99.8% | :material-check-circle:{ style="color: green" } |
-| Agent Runtime | 99.5% | 99.6% | :material-check-circle:{ style="color: green" } |
-| Observability | 99.5% | 99.7% | :material-check-circle:{ style="color: green" } |
+| Service | Target |
+|---------|--------|
+| Nexus API | 99.9% |
+| AI Gateway | 99.5% |
+| Agent Runtime | 99.5% |
+| Observability | 99.5% |
 
 ---
 
-## Dashboards
+## Observability
 
-| Dashboard | Description | Link |
-|-----------|-------------|------|
-| Platform Overview | Global platform view | [Grafana](https://grafana.internal/d/platform) |
-| AI Metrics | LLM requests, costs, latency | [Grafana](https://grafana.internal/d/ai) |
-| Kubernetes | Cluster status | [Grafana](https://grafana.internal/d/k8s) |
+Monitoring and observability powered by **Dynatrace**.
+
+| Dashboard | Description |
+|-----------|-------------|
+| Platform Overview | Global platform health and performance |
+| AI Metrics | LLM requests, costs, latency |
+| Infrastructure | AWS resources and serverless metrics |
 
 ---
 

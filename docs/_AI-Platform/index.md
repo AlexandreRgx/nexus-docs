@@ -116,7 +116,7 @@ graph TB
 
     # Use Nexus as proxy
     client = OpenAI(
-        base_url="https://nexus.internal/ai/v1",
+        base_url="https://nexus.cegid.com/ai/v1",
         api_key="unused"  # Auth via Nexus token
     )
 
@@ -130,7 +130,7 @@ graph TB
 
     ```bash
     nexus ai chat "Hello, how are you?"
-    nexus ai chat "Explain Kubernetes" --model claude-3-opus
+    nexus ai chat "Explain serverless architecture" --model claude-3-opus
     ```
 
 ### Create an agent
@@ -150,31 +150,9 @@ my-agent/
 
 ---
 
-## Available models
-
-| Provider | Models | Use case |
-|----------|---------|----------|
-| **Azure OpenAI** | GPT-4o, GPT-4-turbo, GPT-3.5-turbo | General, coding |
-| **Anthropic** | Claude 3 Opus, Sonnet, Haiku | Analysis, reasoning |
-| **Mistral** | Mistral Large, Medium | Cost optimized |
-| **Custom** | Internal fine-tuned models | Specific use cases |
-
----
-
 ## Governance
 
 - **Logging**: All requests are logged (prompts, responses, metadata)
 - **PII Detection**: Alerts on personal data in prompts
 - **Audit trail**: Complete access history
 
----
-
-## Key metrics
-
-| Metric | Current value |
-|----------|-----------------|
-| LLM requests / day | 45k |
-| Agents in production | 12 |
-| Cataloged MCP servers | 23 |
-| User teams | 15 |
-| Total monthly cost | $12k |

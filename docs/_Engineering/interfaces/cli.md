@@ -17,7 +17,7 @@ Command-line interface for daily operations with Nexus.
 === "Linux"
 
     ```bash
-    curl -sSL https://nexus.internal/install.sh | bash
+    curl -sSL https://nexus.cegid.com/install.sh | bash
     ```
 
 === "Windows"
@@ -160,26 +160,6 @@ nexus app list --format "{{.name}}: {{.team.name}}"
 
 ## Configuration
 
-### Config File
-
-```yaml
-# ~/.nexus/config.yaml
-current_context: production
-
-contexts:
-  production:
-    api_url: https://nexus.internal
-    token: <encrypted>
-
-  staging:
-    api_url: https://nexus-staging.internal
-    token: <encrypted>
-
-defaults:
-  format: table
-  team: platform
-```
-
 ### Switch Context
 
 ```bash
@@ -301,10 +281,10 @@ The CLI supports plugins to extend its functionality:
 nexus plugin list
 
 # Install a plugin
-nexus plugin install nexus-plugin-k8s
+nexus plugin install nexus-plugin-aws
 
 # Use a plugin
-nexus k8s get-pods my-app
+nexus aws list-functions my-app
 ```
 
 ### Create a Plugin

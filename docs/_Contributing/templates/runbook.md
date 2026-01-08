@@ -307,7 +307,7 @@ error rate exceeds 5% for more than 5 minutes.
 ### Prerequisites
 
 - [ ] kubectl access to production cluster
-- [ ] Grafana access
+- [ ] Dynatrace access
 
 ---
 

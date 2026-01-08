@@ -13,7 +13,7 @@ Nexus follows the **API-first** principle: every feature is first an API. The SD
 ```mermaid
 graph LR
     SPEC[OpenAPI Spec] --> FERN[Fern]
-    FERN --> API[REST API]
+    SPEC --> API[REST API]
     FERN --> SDK_PY[SDK Python]
     FERN --> SDK_TS[SDK TypeScript]
     FERN --> SDK_GO[SDK Go]
@@ -159,8 +159,8 @@ X-RateLimit-Reset: 1705312800
 The API is versioned via path:
 
 ```
-https://nexus.internal/api/v1/apps
-https://nexus.internal/api/v2/apps  # future
+https://nexus.cegid.com/api/v1/apps
+https://nexus.cegid.com/api/v2/apps  # future
 ```
 
 ### Deprecation Policy

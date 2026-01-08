@@ -1,48 +1,95 @@
-# Agent Hosting
+# Agent Hosting & Agent SDK
 
 <p style="font-size: 1.1em; color: #666; margin-bottom: 2em;">
-Managed runtime to run your AI agents in production.
+Build agents with your preferred framework, deploy them on managed infrastructure.
 </p>
 
 !!! warning "Implementation Status"
 
     Agent Hosting will be based on **Cegid Pulse OS Custom Orchestration**. The detailed implementation is currently being defined.
 
+!!! info "Collaboration"
+
+    This section should be built jointly with the **Pulse OS team** to benefit from their experience on the subject.
+
 ---
 
 ## Overview
 
-Agent Hosting provides an execution environment for your agents, based on the Pulse infrastructure. It handles:
+Agent Hosting provides a managed execution environment purpose-built for AI agents. Unlike raw serverless functions (Lambda, Azure Functions), agent-native platforms offer critical advantages for agentic workloads.
 
-- **Deployment**: Built-in CI/CD
-- **Scaling**: Auto-scaling based on load
-- **Observability**: Logs, metrics, traces
-- **Security**: Isolation, secrets management
+![Agent Platform Architecture](agent_bedrock.png)
 
-```mermaid
-graph TB
-    subgraph "Agent Hosting"
-        LB[Load Balancer]
-        subgraph "Runtime Pods"
-            A1[Agent Instance 1]
-            A2[Agent Instance 2]
-            A3[Agent Instance N]
-        end
-        QUEUE[Task Queue]
-    end
+### Why not Lambda / Azure Functions?
 
-    CLIENT[Clients] --> LB
-    LB --> A1
-    LB --> A2
-    LB --> A3
+Traditional serverless functions are designed for short, stateless executions. AI agents have fundamentally different requirements:
 
-    A1 --> LLM[Model Access]
-    A2 --> LLM
-    A3 --> LLM
+| Challenge | Lambda / Azure Functions | Agent-Native Platform |
+|-----------|--------------------------|----------------------|
+| **Session duration** | Max 15 min timeout | Up to 8 hours for async workloads |
+| **I/O wait costs** | Pay for idle time (30-70% of agent runtime) | Pay only for active compute |
+| **Session isolation** | Shared execution contexts | Complete microVM isolation per session |
+| **Memory & state** | Stateless by design | Built-in short & long-term memory |
+| **Agent-specific tools** | Build from scratch | Code interpreter, browser, built-in tools |
+| **Policy & guardrails** | Manual implementation | Natural language policy definitions |
 
-    A1 --> TOOLS[Agent Tools]
-    A2 --> TOOLS
-```
+### Platform capabilities
+
+The Nexus Agent Hosting platform provides:
+
+- **Memory**: Short & long-term memory for conversation continuity
+- **Built-in tools**: Code interpreter, browser, pre-integrated capabilities
+- **Gateways**: API and Lambda function integration as MCP servers
+- **Identity**: Inbound and outbound authentication
+- **Policy**: Authorization control with natural language rules
+- **Runtime**: Secure, isolated agent execution
+- **Observability**: Monitor and debug agent behavior
+- **Evaluations**: Pre-built and custom evaluators
+
+### Cloud providers
+
+The primary implementation is based on **Amazon Bedrock AgentCore**: [aws.amazon.com/bedrock/agentcore](https://aws.amazon.com/bedrock/agentcore/)
+
+!!! info "Azure alternative"
+    A similar solution could be envisioned on Azure using [Azure AI Foundry Agent Service](https://azure.microsoft.com/en-us/products/ai-foundry/agent-service).
+
+---
+
+## Identity & Authentication
+
+Agents need secure identity for both inbound (who can call the agent) and outbound (what the agent can access) authentication.
+
+![Agent Identity Flow](agent_bedrock_2.png)
+
+| Flow | Description |
+|------|-------------|
+| **Inbound Auth** | Validates caller identity before agent execution |
+| **Outbound Auth (Direct)** | Agent accesses AWS resources via IAM, or external APIs via OAuth/API keys |
+| **Outbound Auth (Gateway)** | Agent calls through a managed gateway with its own auth layer |
+
+---
+
+## Agent SDK
+
+### Use any framework
+
+Nexus doesn't impose an agent framework. Use the one that fits your needs:
+
+- [LangGraph](https://langchain-ai.github.io/langgraph/) — Graph-based orchestration
+- [OpenAI Agents SDK](https://openai.github.io/openai-agents-python/) — OpenAI-native
+- [Google ADK](https://google.github.io/adk-docs/) — Gemini-native
+- [CrewAI](https://docs.crewai.com/) — Multi-agent teams
+- [Anthropic Claude SDK](https://docs.anthropic.com/en/docs/agents) — Claude-native
+
+### What Nexus provides
+
+When you deploy an agent on Nexus, the platform handles:
+
+| Capability | Description |
+|------------|-------------|
+| **Identity** | Automatic service account and JWT tokens |
+| **AI Gateway** | Model access with quotas and audit |
+| **Observability** | Tracing, metrics, logs (OpenTelemetry) |
 
 ---
 
@@ -60,74 +107,6 @@ nexus ai agent deploy my-agent \
   --replicas 3 \
   --cpu 1000m \
   --memory 1Gi
-```
-
-### Via GitOps
-
-Add a GitHub Actions workflow:
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Agent
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Deploy to Nexus
-        uses: nexus/agent-deploy@v1
-        with:
-          agent: my-agent
-          environment: production
-          token: ${{ secrets.NEXUS_TOKEN }}
-```
-
----
-
-## Configuration
-
-### config.yaml
-
-```yaml
-# config.yaml
-name: my-agent
-version: 1.0.0
-
-hosting:
-  # Resources per instance
-  cpu: 500m
-  memory: 512Mi
-
-  # Scaling
-  replicas:
-    min: 1
-    max: 10
-
-  # Auto-scaling
-  autoscaling:
-    enabled: true
-    target_cpu: 70
-    target_memory: 80
-
-  # Health check
-  health:
-    path: /health
-    interval: 10s
-    timeout: 5s
-
-  # Environment variables
-  env:
-    LOG_LEVEL: info
-
-  # Secrets (referenced from Vault)
-  secrets:
-    - EXTERNAL_API_KEY
 ```
 
 ### Environments
@@ -245,24 +224,6 @@ class MyAgent(Agent):
 ---
 
 ## Scaling
-
-### Configuration
-
-```yaml
-autoscaling:
-  enabled: true
-  min_replicas: 2
-  max_replicas: 20
-
-  metrics:
-    - type: cpu
-      target: 70
-    - type: memory
-      target: 80
-    - type: custom
-      name: queue_depth
-      target: 10
-```
 
 ### Manual scaling
 

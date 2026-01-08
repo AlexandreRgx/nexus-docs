@@ -19,6 +19,7 @@ gantt
     Agent Hosting        :done, agent-host, 2026-02, 2026-06
     RAG API              :active, rag, 2026-02, 2026-06
     Agent Identity & A2A :a2a, 2026-07, 2026-12
+    Agent Frontend       :agent-ui, 2026-07, 2026-12
     Code Execution       :code-exec, 2026-07, 2026-12
     MCP Ecosystem        :mcp, 2026-07, 2026-12
 
@@ -106,6 +107,14 @@ gantt
     Secure identity management and Agent-to-Agent communication protocols.
 
     [:octicons-arrow-right-24: Documentation](_AI-Platform/agents/_2-identity.md)
+
+-   :material-monitor:{ .lg .middle } **Agent Frontend**
+
+    ---
+
+    Standardized React component for agent UI with AG-UI protocol, fullscreen/windowed modes. Published in CDS React.
+
+    [:octicons-arrow-right-24: Documentation](_AI-Platform/agents/index.md#agent-frontend)
 
 -   :material-code-braces:{ .lg .middle } **Code Execution**
 

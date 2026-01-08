@@ -25,6 +25,8 @@ graph LR
     SDK --> API
 ```
 
+![Nexus Web App - Catalog](../example_web.png)
+
 ---
 
 ## Features
@@ -62,8 +64,8 @@ graph LR
 ## Access
 
 ```
-Production : https://nexus.internal
-Staging    : https://nexus-staging.internal
+Production : https://nexus.cegid.com
+Staging    : https://staging.nexus.cegid.com
 ```
 
 ### Authentication

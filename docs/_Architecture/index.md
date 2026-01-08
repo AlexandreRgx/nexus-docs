@@ -6,9 +6,37 @@ Architecture decisions and technical documentation.
 
 ---
 
+## Cloud Architecture
+
+The Nexus Platform is built on AWS with Azure AD for identity management.
+
+![General Schema](assets/Nexus%20Platform%20-%20General%20schema.png)
+
+### Components
+
+| Layer | Service | Purpose |
+|-------|---------|---------|
+| **Authentication** | Cegid Azure AD | Identity provider (SSO, OAuth2) |
+| **Edge** | Amazon CloudFront | CDN and request routing |
+| **Static Hosting** | Amazon S3 | Frontend assets and static files |
+| **API** | Amazon API Gateway | REST API management and authorization |
+| **Compute** | AWS Lambda | Serverless application logic |
+| **Database** | Amazon Aurora | Relational data persistence |
+| **Cache** | Amazon ElastiCache | Session storage and caching |
+
+---
+
 ## Documentation
 
 <div class="grid cards" markdown>
+
+-   :material-database:{ .lg .middle } **Data Model**
+
+    ---
+
+    Core entities: Users, Teams, Resources, Environments.
+
+    [:octicons-arrow-right-24: View](data-model.md)
 
 -   :material-shield-account:{ .lg .middle } **Identity & Governance**
 

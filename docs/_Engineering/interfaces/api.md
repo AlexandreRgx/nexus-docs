@@ -9,8 +9,8 @@ The reference programmatic interface for all Nexus operations.
 ## Base URL
 
 ```
-Production : https://nexus.internal/api/v1
-Staging    : https://nexus-staging.internal/api/v1
+Production : https://nexus.cegid.com/api/v1
+Staging    : https://staging.nexus.cegid.com/api/v1
 ```
 
 ---
@@ -20,7 +20,7 @@ Staging    : https://nexus-staging.internal/api/v1
 All requests must include a Bearer token:
 
 ```bash
-curl https://nexus.internal/api/v1/apps \
+curl https://nexus.cegid.com/api/v1/apps \
   -H "Authorization: Bearer $NEXUS_TOKEN"
 ```
 
@@ -180,7 +180,7 @@ Content-Type: application/json
   "data": {
     "id": "res_abc123",
     "status": "planning",
-    "plan_url": "https://nexus.internal/plans/plan_xyz"
+    "plan_url": "https://nexus.cegid.com/plans/plan_xyz"
   }
 }
 ```

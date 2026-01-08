@@ -10,6 +10,8 @@ hide:
 
     :material-hammer-wrench: **This is not the platform itself.** This site documents the vision, roadmap, and architecture for building the Nexus Platform. It serves as a collaborative space to design, discuss, and plan the project.
 
+    :material-heart: **We welcome contributors!** Feel free to submit a PR on [nexus-docs](https://github.com/cegid/nexus-docs).
+
 <p style="font-size: 1.4em; color: #666; margin-top: -0.5em; margin-bottom: 1.5em;">
 The internal platform that unifies Engineering and AI.
 </p>
@@ -47,6 +49,40 @@ The internal platform that unifies Engineering and AI.
     Observability and incident management.
 
     [:octicons-arrow-right-24: Explore](_Operations/index.md)
+
+</div>
+
+---
+
+## Motivations
+
+Why build an internal platform? The challenges we aim to solve:
+
+<div class="grid cards" markdown>
+
+-   :material-puzzle:{ .lg .middle } __Fragmentation__
+
+    ---
+
+    Teams use different stacks, deploy differently, and reinvent the wheel. Knowledge is siloed, onboarding is slow.
+
+-   :material-robot-confused:{ .lg .middle } __AI Chaos__
+
+    ---
+
+    Multiple AI providers, no visibility on usage or costs, security concerns, and no governance framework.
+
+-   :material-head-cog:{ .lg .middle } __Cognitive Load__
+
+    ---
+
+    Infrastructure, security, compliance, observability... developers spend more time on plumbing than on business value.
+
+-   :material-ghost:{ .lg .middle } __Shadow IT__
+
+    ---
+
+    Without easy official paths, teams build workarounds. Technical debt accumulates, security gaps appear.
 
 </div>
 
@@ -158,8 +194,6 @@ The internal platform that unifies Engineering and AI.
 
 ---
 
-<div style="text-align: center; padding: 2em 0; color: #888;">
-
+<p style="text-align: center; padding: 2em 0; color: #888;" markdown>
 :material-github: [nexus-docs](https://github.com/cegid/nexus-docs)
-
-</div>
+</p>

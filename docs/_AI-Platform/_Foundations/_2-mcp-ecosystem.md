@@ -87,20 +87,6 @@ class MyAgent(Agent):
         )
 ```
 
-### Configuration
-
-```yaml
-# config.yaml
-mcp:
-  servers:
-    - name: github
-      auth: oauth  # Uses configured OAuth auth
-    - name: slack
-      auth: bot_token
-    - name: postgres
-      connection_string: ${DATABASE_URL}
-```
-
 ---
 
 ## GitHub Server
@@ -198,17 +184,7 @@ table_info = postgres.call("describe_table", table="users")
 
 ### Security
 
-By default, only SELECT queries are allowed. To enable writes:
-
-```yaml
-mcp:
-  servers:
-    - name: postgres
-      allow_writes: true  # Dangerous!
-      allowed_tables:
-        - users
-        - orders
-```
+By default, only SELECT queries are allowed. Write access requires explicit configuration and approval.
 
 ---
 
@@ -274,18 +250,6 @@ Each MCP server can use different auth types:
 | `oauth` | OAuth2 flow |
 | `service_account` | Nexus service account |
 
-### Permissions
-
-```yaml
-mcp:
-  servers:
-    - name: github
-      permissions:
-        - repos:read
-        - issues:write
-        # No delete
-```
-
 ### Audit
 
 All MCP requests are logged:
@@ -301,36 +265,12 @@ nexus mcp audit --server github --since 24h
 
 !!! tip "Caching"
 
-    Enable caching for frequent requests:
-
-    ```yaml
-    mcp:
-      servers:
-        - name: github
-          cache:
-            enabled: true
-            ttl: 300  # 5 minutes
-    ```
+    Enable caching for frequent requests to improve performance and reduce external API calls.
 
 !!! warning "Rate limiting"
 
-    Configure limits to avoid saturating external services:
-
-    ```yaml
-    mcp:
-      servers:
-        - name: slack
-          rate_limit: 30/minute
-    ```
+    Configure limits to avoid saturating external services.
 
 !!! danger "Sensitive data"
 
-    Never expose credentials in logs. Use masking:
-
-    ```yaml
-    mcp:
-      servers:
-        - name: postgres
-          log_queries: true
-          mask_sensitive: true
-    ```
+    Never expose credentials in logs. Enable sensitive data masking.

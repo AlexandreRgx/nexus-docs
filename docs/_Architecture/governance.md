@@ -1,7 +1,7 @@
 # Identity & Governance
 
 <p style="font-size: 1.1em; color: #666; margin-bottom: 2em;">
-Identity, Teams, and Resource Governance model.
+Identity, Products, and Resource Governance model.
 </p>
 
 ---
@@ -12,32 +12,35 @@ Identity, Teams, and Resource Governance model.
 graph TB
     subgraph "Identity"
         AAD[Azure AD]
+        AADG[AAD Groups]
+        Users[Users]
     end
 
     subgraph "Governance"
-        NA[Nexus Admin]
-        TL[Team Leader]
-        TM[Team Member]
+        Products[Products]
     end
 
     subgraph "Resources"
-        DEV[dev]
-        TEST[test]
-        PROD[prod]
+        RES[Resources]
+        DEV[development]
+        STG[staging]
+        PROD[production]
     end
 
-    AAD --> NA
-    AAD --> TL
-    AAD --> TM
-
-    NA --> TL
-    TL --> DEV
-    TL --> TEST
-    TL --> PROD
-    TM --> DEV
-    TM --> TEST
-    TM --> PROD
+    AAD --> Users
+    AAD --> AADG
+    AADG --> Products
+    Users -.-> Products
+    Products --> RES
+    RES --> DEV
+    RES --> STG
+    RES --> PROD
 ```
+
+**Access model:**
+
+- **Primary**: Users access Products via Azure AD Groups (`product_aad_groups`)
+- **Secondary**: Optional direct membership via `product_members` (admin/member roles) for exceptions or service accounts
 
 ---
 
@@ -59,63 +62,45 @@ graph TB
 
 ## Roles
 
+### Global Roles (users.role)
+
 <div class="grid cards" markdown>
 
--   :material-shield-crown:{ .lg .middle } **Nexus Admin**
+-   :material-shield-crown:{ .lg .middle } **Admin**
 
     ---
 
-    - Create, modify, or archive Teams
-    - Appoint or revoke Team Leaders
-    - Define global platform rules (default quotas, environments, providers, policies)
+    - Create, modify, or archive Products
+    - Manage Azure AD group associations
+    - Define global platform rules (quotas, environments, policies)
 
--   :material-account-tie:{ .lg .middle } **Team Leader**
-
-    ---
-
-    - Can lead one or multiple Teams
-    - Manage Team members
-    - Create and administer team-scoped resources
-    - Define quotas per environment
-    - Responsible for usage, costs, and compliance
-
--   :material-account:{ .lg .middle } **Team Member**
+-   :material-account:{ .lg .middle } **User**
 
     ---
 
-    - Access only their Team's resources
-    - No governance rights
+    - Access Products via Azure AD group membership
+    - Operate on resources within their Products
 
 </div>
 
----
-
-## Team Lifecycle
-
-### Creation (via ServiceNow)
-
-All Team creation goes through **ServiceNow**:
-
-```mermaid
-graph LR
-    A[ServiceNow Request] --> B[Nexus Admin Validation]
-    B --> C[Team Created in Nexus]
-    C --> D[Roles Applied via Azure AD]
-```
-
-Request includes: name, description, Team Leader(s), environments, initial quotas.
-
-### Team Leader Changes
-
-- All nominations go through ServiceNow
-- Validated by Nexus Admin
-- Revocation doesn't impact existing resources
+!!! info "Optional: Product Members"
+    For exceptions, service accounts, or fine-grained access control, users can be added directly to a Product via `product_members` with roles `admin` or `member`. This bypasses Azure AD group membership.
 
 ---
 
-## Teams as Ownership Unit
+## Product Lifecycle
 
-Teams are the central unit for:
+### Azure AD Group Management
+
+- Products are linked to Azure AD groups via `product_aad_groups`
+- Users inherit access through their group memberships
+- Group membership managed in Azure AD (not in Nexus)
+
+---
+
+## Products as Ownership Unit
+
+Products are the central unit for:
 
 <div class="grid" markdown>
 
@@ -123,18 +108,18 @@ Teams are the central unit for:
     Policies and rules
 
 !!! abstract "Security"
-    Access control
+    Access control via Azure AD
 
 !!! abstract "Costs"
     Budget and quotas
 
 !!! abstract "Operations"
-    Responsibility
+    Responsibility and ownership
 
 </div>
 
 !!! info "Key Rule"
-    Every official resource belongs to a Team.
+    Every official resource belongs to a Product.
 
 ---
 
@@ -142,9 +127,9 @@ Teams are the central unit for:
 
 | Environment | Purpose | Icon |
 |-------------|---------|------|
-| `dev` | Development and experimentation | :material-test-tube: |
-| `test` | Integration and validation | :material-checkbox-marked-circle: |
-| `prod` | Production workloads | :material-rocket-launch: |
+| `development` | Development and experimentation | :material-test-tube: |
+| `staging` | Integration and validation | :material-checkbox-marked-circle: |
+| `production` | Production workloads | :material-rocket-launch: |
 
 Environments are:
 
@@ -166,18 +151,18 @@ Environments are:
     For individual experimentation and rapid prototyping:
 
     - Attached to an Azure AD user
-    - **Only in `dev`** environment
+    - **Only in `development`** environment
     - Strictly limited quotas
     - No promotion possible
     - No prod dependencies
 
     **Examples:** personal AI agent, temporary LLM access, RAG sandbox
 
-!!! success "Team-scoped (Default)"
+!!! success "Product-scoped (Default)"
 
-    All shared resources or resources in `test`/`prod` are **Team-scoped**:
+    All shared resources or resources in `staging`/`production` are **Product-scoped**:
 
-    - Quotas, costs, and responsibilities owned by the Team
+    - Quotas, costs, and responsibilities owned by the Product
     - Required for any production workload
 
 </div>
@@ -191,8 +176,8 @@ Environments are:
 
 | Environment | Purpose |
 |-------------|---------|
-| `dev` | Exploration |
-| `test` / `prod` | Intentional, governed creation |
+| `development` | Exploration |
+| `staging` / `production` | Intentional, governed creation |
 
 Resources are **recreated**, never promoted.
 
@@ -202,9 +187,9 @@ Resources are **recreated**, never promoted.
 
 | Resource | Scope | Icon |
 |----------|-------|------|
-| **LLM Model Access** | Per Team, per environment | :material-brain: |
-| **Application Registration** | Azure AD based, Team-scoped (except dev) | :material-application: |
-| **Agent Hosting** | Attached to Team + environment, strict isolation | :material-robot: |
+| **LLM Model Access** | Per Product, per environment | :material-brain: |
+| **Application Registration** | Azure AD based, Product-scoped (except dev) | :material-application: |
+| **Agent Hosting** | Attached to Product + environment, strict isolation | :material-robot: |
 
 ---
 
@@ -214,11 +199,9 @@ Resources are **recreated**, never promoted.
 
 -   :material-key: **SSO everywhere**
 
--   :material-account-cog: **Admins create teams, not users**
+-   :material-account-cog: **Admins create Products, not users**
 
--   :material-ticket: **ServiceNow as governance entry point**
-
--   :material-account-group: **Teams own resources**
+-   :material-account-group: **Products own resources**
 
 -   :material-shield-check: **No prod without ownership**
 

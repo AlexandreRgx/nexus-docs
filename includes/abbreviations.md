@@ -14,7 +14,6 @@
 *[IaC]: Infrastructure as Code
 *[IAM]: Identity and Access Management
 *[JWT]: JSON Web Token
-*[K8s]: Kubernetes
 *[LLM]: Large Language Model
 *[MTBF]: Mean Time Between Failures
 *[MTTD]: Mean Time to Detect

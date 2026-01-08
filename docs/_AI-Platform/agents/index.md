@@ -17,57 +17,53 @@ An agent is a program that uses an LLM to accomplish tasks autonomously. Unlike 
 - **Use tools**: Call APIs, execute code, search the web
 - **Reason**: Break down a complex problem into steps
 - **Iterate**: Correct its errors and refine its responses
-- **Collaborate**: Communicate with other agents (A2A)
-
-```mermaid
-graph TB
-    USER[User] --> AGENT[Agent]
-    AGENT --> LLM[LLM]
-    AGENT --> TOOLS[Tools]
-
-    subgraph "Tools"
-        RAG[RAG API]
-        CODE[Code Exec]
-        WEB[Web Search]
-        API[Custom APIs]
-    end
-
-    LLM -->|Reasoning| AGENT
-    TOOLS -->|Results| AGENT
-    AGENT -->|Response| USER
-```
+- **Collaborate**: Communicate with other agents
 
 ---
 
-## Nexus Agent Framework
+## Protocol Stack
 
-Nexus provides a complete framework for agents:
+Agents in the Cegid ecosystem communicate through three open protocols:
+
+![AI Protocol Stack](ai-protocol-stack.avif)
+
+| Protocol | Purpose | Specification |
+|----------|---------|---------------|
+| **AG-UI** | Agent ↔ User Interface | [docs.ag-ui.com](https://docs.ag-ui.com) |
+| **A2A** | Agent ↔ Agent | [a2a-protocol.org](https://a2a-protocol.org) |
+| **MCP** | Agent ↔ Tools | [modelcontextprotocol.io](https://modelcontextprotocol.io) |
+
+---
+
+## Nexus Agent Platform
+
+Use any agent framework. Nexus provides the infrastructure.
 
 <div class="grid cards" markdown>
 
--   :material-file-code:{ .lg .middle } **Templates**
+-   :material-server:{ .lg .middle } **Hosting & SDK**
 
     ---
 
-    Ready-to-use starters for different agent patterns.
+    Managed runtime, identity, observability.
 
-    [:octicons-arrow-right-24: View templates](templates.md)
-
--   :material-server:{ .lg .middle } **Hosting**
-
-    ---
-
-    Managed runtime to run your agents in production.
-
-    [:octicons-arrow-right-24: Deploy](hosting.md)
+    [:octicons-arrow-right-24: Deploy](_1-hosting.md)
 
 -   :material-badge-account:{ .lg .middle } **Identity & A2A**
 
     ---
 
-    Authentication and communication between agents.
+    Authentication and agent-to-agent communication.
 
-    [:octicons-arrow-right-24: Configure](identity.md)
+    [:octicons-arrow-right-24: Configure](_2-identity.md)
+
+-   :material-format-list-bulleted:{ .lg .middle } **Agent Registry**
+
+    ---
+
+    Discover and publish agents in the Cegid ecosystem.
+
+    [:octicons-arrow-right-24: Browse](#agent-registry)
 
 -   :material-wrench:{ .lg .middle } **Tools**
 
@@ -75,7 +71,15 @@ Nexus provides a complete framework for agents:
 
     Pre-integrated tools: RAG, Code Exec, Web Search.
 
-    [:octicons-arrow-right-24: Explore](tools.md)
+    [:octicons-arrow-right-24: Explore](_4-tools.md)
+
+-   :material-monitor:{ .lg .middle } **Frontend**
+
+    ---
+
+    React component for agent interfaces (AG-UI).
+
+    [:octicons-arrow-right-24: Integrate](_5-frontend.md)
 
 </div>
 
@@ -83,186 +87,59 @@ Nexus provides a complete framework for agents:
 
 ## Quick Start
 
-### Create an agent
-
 ```bash
-# Scaffold a new agent
-nexus ai agent new my-assistant --template basic
+# Create a new agent project
+nexus ai agent new my-assistant --framework langgraph
 
+# Run locally
 cd my-assistant
-```
+nexus ai agent serve
 
-Generated structure:
-
-```
-my-assistant/
-├── agent.py           # Main code
-├── config.yaml        # Configuration
-├── tools/             # Custom tools
-│   └── __init__.py
-├── tests/
-│   └── test_agent.py
-├── Dockerfile
-└── README.md
-```
-
-### Basic code
-
-```python
-# agent.py
-from nexus.ai.agents import Agent, tool
-
-class MyAssistant(Agent):
-    """A simple assistant."""
-
-    system_prompt = """You are a helpful assistant.
-    You can use the available tools to answer questions."""
-
-    @tool
-    def search_docs(self, query: str) -> str:
-        """Search in the documentation."""
-        # Implement search
-        return f"Results for: {query}"
-
-    @tool
-    def calculate(self, expression: str) -> float:
-        """Evaluate a mathematical expression."""
-        return eval(expression)  # Simplified for example
-```
-
-### Test locally
-
-```bash
-# Run the agent in interactive mode
-nexus ai agent run
-
-# Or via local API
-nexus ai agent serve --port 8080
-```
-
-### Deploy
-
-```bash
-# Deploy to Nexus
+# Deploy to production
 nexus ai agent deploy --env production
-
-# Check status
-nexus ai agent status my-assistant
 ```
 
 ---
 
-## Agent patterns
+## Agent Registry
 
-### Conversational
+The Agent Registry lists all agents available in the Cegid ecosystem. It uses the [A2A protocol](https://a2a-protocol.org) for discovery.
 
-Agent that maintains a conversation context:
+### Agent Card
 
-```python
-class ConversationalAgent(Agent):
-    system_prompt = "You are a conversational assistant."
+Each agent publishes an **Agent Card** (JSON) describing its capabilities:
 
-    def __init__(self):
-        self.memory = ConversationMemory(max_turns=10)
+```json
+{
+  "name": "invoice-assistant",
+  "description": "Helps with invoice processing and queries",
+  "url": "https://agents.cegid.cloud/invoice-assistant",
+  "skills": [
+    { "name": "search_invoices", "description": "Search invoices by criteria" },
+    { "name": "create_invoice", "description": "Create a new invoice" }
+  ],
+  "authentication": {
+    "type": "bearer",
+    "issuer": "https://auth.cegid.cloud"
+  }
+}
 ```
 
-### RAG (Retrieval-Augmented Generation)
+### Discover agents
 
-Agent that searches in a knowledge base:
+```bash
+# List available agents
+nexus ai agent list
 
-```python
-class RAGAgent(Agent):
-    def __init__(self):
-        self.retriever = NexusRetriever(index="docs")
-
-    @tool
-    def search(self, query: str) -> str:
-        docs = self.retriever.search(query, top_k=5)
-        return "\n".join(d.content for d in docs)
+# Get agent details
+nexus ai agent info invoice-assistant
 ```
 
-### ReAct (Reasoning + Acting)
+### Publish your agent
 
-Agent that reasons step by step:
-
-```python
-class ReActAgent(Agent):
-    system_prompt = """Use the format:
-    Thought: think about the problem
-    Action: choose a tool
-    Observation: observe the result
-    ... (repeat)
-    Final Answer: give the final answer"""
+```bash
+# Register in the catalog
+nexus ai agent publish --env production
 ```
 
-### Multi-agent
-
-Multiple agents collaborating:
-
-```python
-class OrchestratorAgent(Agent):
-    def __init__(self):
-        self.researcher = ResearchAgent()
-        self.writer = WriterAgent()
-
-    async def process(self, task: str):
-        research = await self.researcher.run(task)
-        result = await self.writer.run(research)
-        return result
-```
-
----
-
-## Configuration
-
-```yaml
-# config.yaml
-name: my-assistant
-version: 1.0.0
-
-model:
-  name: gpt-4o
-  temperature: 0.7
-  max_tokens: 2000
-
-memory:
-  type: conversation
-  max_turns: 20
-
-tools:
-  - name: search_docs
-    enabled: true
-  - name: calculate
-    enabled: true
-
-hosting:
-  replicas: 2
-  cpu: 500m
-  memory: 512Mi
-
-observability:
-  tracing: true
-  metrics: true
-```
-
----
-
-## Best practices
-
-!!! tip "System prompts"
-
-    - Be explicit about the role and constraints
-    - Include examples of expected behavior
-    - Limit capabilities to actual needs
-
-!!! warning "Security"
-
-    - Validate user inputs
-    - Limit available tools
-    - Log all actions
-
-!!! danger "Costs"
-
-    - Monitor consumed tokens
-    - Set loop limits
-    - Use caching when possible
+Once published, your agent is discoverable by other agents and applications in the Cegid ecosystem.
