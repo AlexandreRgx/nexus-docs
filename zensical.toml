@@ -48,7 +48,8 @@ nav = [
       {"Agent Identity & A2A" = "_AI-Platform/agents/_2-identity.md"},
       {"Agent Templates" = "_AI-Platform/agents/_3-templates.md"},
       {"Agent Tools & MCP" = "_AI-Platform/agents/_4-tools.md"},
-      {"Agent Frontend" = "_AI-Platform/agents/_5-frontend.md"}
+      {"Agent Frontend" = "_AI-Platform/agents/_5-frontend.md"},
+      {"RAG API" = "_AI-Platform/agents/_6-rag-api.md"}
     ]},
     {"AI Dev Tools" = [
       {"Overview" = "_AI-Platform/dev-tools/index.md"},

@@ -73,6 +73,14 @@ Use any agent framework. Nexus provides the infrastructure.
 
     [:octicons-arrow-right-24: Explore](_4-tools.md)
 
+-   :material-database-search:{ .lg .middle } **RAG API**
+
+    ---
+
+    Intelligent search over documents and knowledge bases.
+
+    [:octicons-arrow-right-24: Learn more](_6-rag-api.md)
+
 -   :material-monitor:{ .lg .middle } **Frontend**
 
     ---
